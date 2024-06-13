@@ -1,0 +1,35 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Keyword {
+  createdAt     DateTime       @default(now())
+  id            String         @id @default(cuid())
+  keyword       String?
+  scrapeResults ScrapeResult[]
+  updatedAt     DateTime       @updatedAt
+}
+
+model Url {
+  createdAt     DateTime       @default(now())
+  id            String         @id @default(cuid())
+  scrapeResults ScrapeResult[]
+  updatedAt     DateTime       @updatedAt
+  url           String?
+}
+
+model ScrapeResult {
+  createdAt DateTime @default(now())
+  id        String   @id @default(cuid())
+  keyword   Keyword? @relation(fields: [keywordId], references: [id])
+  keywordId String?
+  result    String?
+  updatedAt DateTime @updatedAt
+  url       Url?     @relation(fields: [urlId], references: [id])
+  urlId     String?
+}
